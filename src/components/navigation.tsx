@@ -23,10 +23,22 @@ export function Navigation() {
         <nav className="flex items-center gap-1 sm:gap-3 text-sm font-medium text-stone-600">
           <Link
             href="/worlds"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-colors hover:text-stone-900 hover:bg-stone-200/50"
+            className="relative group inline-flex items-center rounded-lg p-[1.5px] overflow-hidden transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-[0_0_12px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(52,211,153,0.4)]"
           >
-            <Compass className="h-4 w-4 text-emerald-800" />
-            <span>Worlds</span>
+            {/* Rotating light beam running around the border */}
+            <div
+              className="absolute inset-[-150%] animate-border-beam"
+              style={{
+                background:
+                  "conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #34d399 315deg, #a7f3d0 340deg, #ffffff 360deg)",
+              }}
+            />
+
+            {/* Inner button surface */}
+            <div className="relative z-10 flex items-center gap-1.5 px-3 py-1 rounded-[7px] bg-emerald-950/95 text-emerald-100 font-medium text-xs sm:text-sm border border-emerald-400/30 transition-colors duration-200 group-hover:bg-emerald-900 group-hover:text-white">
+              <Compass className="h-3.5 w-3.5 text-emerald-300 transition-transform duration-500 group-hover:rotate-45" />
+              <span>Worlds</span>
+            </div>
           </Link>
           <Link
             href="/how-to-contribute"
