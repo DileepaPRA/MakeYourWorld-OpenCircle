@@ -81,7 +81,11 @@ export function extractIssueFormField(body: string, keywords: string[]): string 
 
       if (lines.length > 0) {
         const firstLine = lines[0];
-        if (firstLine !== "_No response_" && firstLine !== "No response" && firstLine !== "None") {
+        if (
+          firstLine !== "_No response_" &&
+          firstLine !== "No response" &&
+          firstLine !== "None"
+        ) {
           return firstLine;
         }
       }
@@ -195,7 +199,9 @@ export function parseIssueSlotBody(body: string): ParsedIssueSlot {
   } else if (rawCategory && rawCategory.trim() !== "") {
     // Example: "🌲 Forest: Butterfly (Woodland Wildlife / Fauna)" -> "Butterfly"
     // Remove emoji and theme prefixes
-    let cleaned = rawCategory.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}]/gu, "").trim();
+    let cleaned = rawCategory
+      .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}]/gu, "")
+      .trim();
     if (cleaned.includes(":")) {
       cleaned = cleaned.split(":")[1].trim();
     }
@@ -242,7 +248,10 @@ export function parseIssueSlotBody(body: string): ParsedIssueSlot {
 /**
  * Validates whether all critical fields were parsed from the issue body.
  */
-export function validateParsedSlot(slot: ParsedIssueSlot): { valid: boolean; missing: string[] } {
+export function validateParsedSlot(slot: ParsedIssueSlot): {
+  valid: boolean;
+  missing: string[];
+} {
   const missing: string[] = [];
   if (!slot.rawWorld) missing.push("Target World");
   if (!slot.rawSlot) missing.push("Contribution Slot Identifier");
@@ -299,7 +308,10 @@ Thank you for contributing to Growing Worlds.`;
 /**
  * Builds the completion/celebration comment with an idempotency marker.
  */
-export function buildCompletionComment(issueNumber: number, slot: ParsedIssueSlot): string {
+export function buildCompletionComment(
+  issueNumber: number,
+  slot: ParsedIssueSlot
+): string {
   const marker = `<!-- growing-worlds:completion:${issueNumber} -->`;
 
   return `${marker}
@@ -332,8 +344,15 @@ export function isClaimComment(commentBody?: string | null): boolean {
 
   const canonicalWithEmoji = "hi! i'd like to work on this issue. thank you! 🙌";
   const canonicalNoEmoji = "hi! i'd like to work on this issue. thank you!";
+  const canonicalWouldWithEmoji = "hi! i would like to work on this issue. thank you! 🙌";
+  const canonicalWouldNoEmoji = "hi! i would like to work on this issue. thank you!";
 
-  return normalized === canonicalWithEmoji || normalized === canonicalNoEmoji;
+  return (
+    normalized === canonicalWithEmoji ||
+    normalized === canonicalNoEmoji ||
+    normalized === canonicalWouldWithEmoji ||
+    normalized === canonicalWouldNoEmoji
+  );
 }
 
 /**
@@ -353,4 +372,3 @@ This contribution slot is currently assigned to **@${currentAssignee}**.
 
 Please choose another unassigned contribution slot. 🌿`;
 }
-

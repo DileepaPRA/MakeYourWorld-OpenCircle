@@ -137,15 +137,51 @@ Add ONE paper-cutout object to Growing Forest inside forest-01.
 
   it("TEST 13: accurately parses all 10 world suggested categories", () => {
     const testWorlds = [
-      { world: "Growing Universe (growing-universe)", cat: "🌌 Universe: Spiral Galaxy (Deep Space Nebula)", expectedObj: "Spiral Galaxy" },
-      { world: "Growing Ocean (growing-ocean)", cat: "🌊 Ocean: Research Submarine (Marine Exploration)", expectedObj: "Research Submarine" },
-      { world: "Growing City (growing-city)", cat: "🏙️ City: Paper Tram (Transit Rail)", expectedObj: "Paper Tram" },
-      { world: "Growing Village (growing-village)", cat: "🏡 Village: Stone Well (Village Landmark)", expectedObj: "Stone Well" },
-      { world: "Growing Island (growing-island)", cat: "🏝️ Island: Island Lighthouse (Coastal Landmark)", expectedObj: "Island Lighthouse" },
-      { world: "Growing Farm (growing-farm)", cat: "🚜 Farm: Pasture Windmill (Farm Landmark)", expectedObj: "Pasture Windmill" },
-      { world: "Growing Campus (growing-campus)", cat: "🏛️ Campus: Campus Telescope (Observatory Instrument)", expectedObj: "Campus Telescope" },
-      { world: "Fantasy World (fantasy-world)", cat: "🔮 Fantasy: Dragon Egg (Mythical Artifact)", expectedObj: "Dragon Egg" },
-      { world: "Alien Planet (alien-planet)", cat: "🪐 Alien: Surface Rover (Exploration Vehicle)", expectedObj: "Surface Rover" },
+      {
+        world: "Growing Universe (growing-universe)",
+        cat: "🌌 Universe: Spiral Galaxy (Deep Space Nebula)",
+        expectedObj: "Spiral Galaxy",
+      },
+      {
+        world: "Growing Ocean (growing-ocean)",
+        cat: "🌊 Ocean: Research Submarine (Marine Exploration)",
+        expectedObj: "Research Submarine",
+      },
+      {
+        world: "Growing City (growing-city)",
+        cat: "🏙️ City: Paper Tram (Transit Rail)",
+        expectedObj: "Paper Tram",
+      },
+      {
+        world: "Growing Village (growing-village)",
+        cat: "🏡 Village: Stone Well (Village Landmark)",
+        expectedObj: "Stone Well",
+      },
+      {
+        world: "Growing Island (growing-island)",
+        cat: "🏝️ Island: Island Lighthouse (Coastal Landmark)",
+        expectedObj: "Island Lighthouse",
+      },
+      {
+        world: "Growing Farm (growing-farm)",
+        cat: "🚜 Farm: Pasture Windmill (Farm Landmark)",
+        expectedObj: "Pasture Windmill",
+      },
+      {
+        world: "Growing Campus (growing-campus)",
+        cat: "🏛️ Campus: Campus Telescope (Observatory Instrument)",
+        expectedObj: "Campus Telescope",
+      },
+      {
+        world: "Fantasy World (fantasy-world)",
+        cat: "🔮 Fantasy: Dragon Egg (Mythical Artifact)",
+        expectedObj: "Dragon Egg",
+      },
+      {
+        world: "Alien Planet (alien-planet)",
+        cat: "🪐 Alien: Surface Rover (Exploration Vehicle)",
+        expectedObj: "Surface Rover",
+      },
     ];
 
     for (const tw of testWorlds) {
@@ -158,12 +194,16 @@ Add ONE paper-cutout object to Growing Forest inside forest-01.
   });
 
   it("TEST 14: detects Growing Worlds issues correctly", () => {
-    expect(
-      isGrowingWorldsContributionIssue("Random bug", [], "Some description")
-    ).toBe(false);
+    expect(isGrowingWorldsContributionIssue("Random bug", [], "Some description")).toBe(
+      false
+    );
 
     expect(
-      isGrowingWorldsContributionIssue("Any title", ["good first issue"], "Some description")
+      isGrowingWorldsContributionIssue(
+        "Any title",
+        ["good first issue"],
+        "Some description"
+      )
     ).toBe(true);
 
     expect(
@@ -177,26 +217,44 @@ Add ONE paper-cutout object to Growing Forest inside forest-01.
 
   describe("Automatic Issue Claiming Helper Tests", () => {
     it("TEST 15: Exact canonical claim with emoji triggers claim", () => {
-      expect(isClaimComment("Hi! I'd like to work on this issue. Thank you! 🙌")).toBe(true);
+      expect(isClaimComment("Hi! I'd like to work on this issue. Thank you! 🙌")).toBe(
+        true
+      );
     });
 
     it("TEST 16: Claim without emoji triggers claim", () => {
       expect(isClaimComment("Hi! I'd like to work on this issue. Thank you!")).toBe(true);
+      expect(
+        isClaimComment("Hi! I would like to work on this issue. Thank you! 🙌")
+      ).toBe(true);
+      expect(isClaimComment("Hi! I would like to work on this issue. Thank you!")).toBe(
+        true
+      );
     });
 
     it("TEST 17: Claim with different capitalization triggers claim", () => {
-      expect(isClaimComment("hi! i'd like to work on this issue. thank you! 🙌")).toBe(true);
-      expect(isClaimComment("HI! I'D LIKE TO WORK ON THIS ISSUE. THANK YOU! 🙌")).toBe(true);
+      expect(isClaimComment("hi! i'd like to work on this issue. thank you! 🙌")).toBe(
+        true
+      );
+      expect(isClaimComment("HI! I'D LIKE TO WORK ON THIS ISSUE. THANK YOU! 🙌")).toBe(
+        true
+      );
       expect(isClaimComment("Hi! I'D like to work on this issue. THANK YOU!")).toBe(true);
     });
 
     it("TEST 18: Claim with extra leading, trailing, and internal whitespace triggers claim", () => {
-      expect(isClaimComment("   Hi!  I'd   like to work on this issue.   Thank you! 🙌  \n")).toBe(true);
-      expect(isClaimComment("\n\tHi! I'd like to work on this issue. Thank you!\n")).toBe(true);
+      expect(
+        isClaimComment("   Hi!  I'd   like to work on this issue.   Thank you! 🙌  \n")
+      ).toBe(true);
+      expect(isClaimComment("\n\tHi! I'd like to work on this issue. Thank you!\n")).toBe(
+        true
+      );
     });
 
     it("TEST 19: Claim with curly/smart apostrophe (’ or ‘) triggers claim", () => {
-      expect(isClaimComment("Hi! I’d like to work on this issue. Thank you! 🙌")).toBe(true);
+      expect(isClaimComment("Hi! I’d like to work on this issue. Thank you! 🙌")).toBe(
+        true
+      );
       expect(isClaimComment("Hi! I‘d like to work on this issue. Thank you!")).toBe(true);
     });
 
@@ -230,7 +288,9 @@ Add ONE paper-cutout object to Growing Forest inside forest-01.
 
     it("TEST 23: Already-assigned issue generates polite rejection comment referencing current assignee", () => {
       const comment = buildAlreadyClaimedComment(51, "student-dev-2", "OBagnell");
-      expect(comment).toContain("<!-- growing-worlds:claim-rejected:51:student-dev-2 -->");
+      expect(comment).toContain(
+        "<!-- growing-worlds:claim-rejected:51:student-dev-2 -->"
+      );
       expect(comment).toContain("@student-dev-2");
       expect(comment).toContain("**@OBagnell**");
       expect(comment).toContain("Please choose another unassigned contribution slot.");
@@ -239,10 +299,13 @@ Add ONE paper-cutout object to Growing Forest inside forest-01.
     it("TEST 24: Rejection comment marker is unique per issue and commenter to prevent duplicate rejections", () => {
       const comment1 = buildAlreadyClaimedComment(51, "student-dev-2", "OBagnell");
       const comment2 = buildAlreadyClaimedComment(51, "student-dev-3", "OBagnell");
-      expect(comment1).toContain("<!-- growing-worlds:claim-rejected:51:student-dev-2 -->");
-      expect(comment2).toContain("<!-- growing-worlds:claim-rejected:51:student-dev-3 -->");
+      expect(comment1).toContain(
+        "<!-- growing-worlds:claim-rejected:51:student-dev-2 -->"
+      );
+      expect(comment2).toContain(
+        "<!-- growing-worlds:claim-rejected:51:student-dev-3 -->"
+      );
       expect(comment1).not.toBe(comment2);
     });
   });
 });
-

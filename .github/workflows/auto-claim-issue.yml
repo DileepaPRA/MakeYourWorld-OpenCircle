@@ -56,8 +56,15 @@ jobs:
 
               const canonicalWithEmoji = "hi! i'd like to work on this issue. thank you! 🙌";
               const canonicalNoEmoji = "hi! i'd like to work on this issue. thank you!";
+              const canonicalWouldWithEmoji = "hi! i would like to work on this issue. thank you! 🙌";
+              const canonicalWouldNoEmoji = "hi! i would like to work on this issue. thank you!";
 
-              return normalized === canonicalWithEmoji || normalized === canonicalNoEmoji;
+              return (
+                normalized === canonicalWithEmoji ||
+                normalized === canonicalNoEmoji ||
+                normalized === canonicalWouldWithEmoji ||
+                normalized === canonicalWouldNoEmoji
+              );
             }
 
             if (!isClaimComment(comment.body)) {
