@@ -266,26 +266,34 @@ export function buildOnboardingComment(
   const marker = `<!-- growing-worlds:onboarding:${issueNumber}:${assignee} -->`;
 
   return `${marker}
-## 👋 Welcome @${assignee}! You have been assigned to this slot! 🎉
 
-We are excited for your contribution to **${slot.worldName}**! Here is a quick reference for your next steps:
+## Contribution Assigned
 
-### 📋 Your Contribution Details
-- **Assigned World**: \`${slot.worldName}\` (\`${slot.worldId}\`)
-- **Assigned Segment**: \`${slot.segmentId}\`
-- **Object**: \`${slot.objectName}\`
-- **Feature Branch**: \`${slot.branchName}\` (must start with \`contrib/\` from \`dev\`)
+Hi @${assignee},
 
-### 📝 Quick Instructions
-1. ⭐ **Star our repo** on GitHub!
-2. 🍴 **Fork our repo** and clone it locally.
-3. 🌿 **Create your branch**: \`git checkout -b ${slot.branchName}\` (from latest \`dev\`).
-4. 🎨 **Commit 1**: Open \`src/data/worlds/${slot.worldId}/objects.ts\`, reference an existing reusable asset from \`public/assets/worlds/${slot.worldId}/\`, and register your object.
-5. 📍 **Commit 2**: Open \`src/data/worlds/${slot.worldId}/placements.ts\` and add placement with \`segmentId: "${slot.segmentId}"\`.
-6. 🧪 **Run checks**: \`npm test && npm run lint && npm run typecheck && npm run build && npx tsx scripts/audit-integrity.ts\`.
-7. 🚀 **Submit PR**: Open PR targeting \`dev\` and include \`Closes #${issueNumber}\` in the description.
+You have been assigned to this contribution slot.
 
-> 💡 *Note: You do NOT need to create or upload a new SVG file. You reuse an existing asset from the repository! Assigned slots are reserved for **48 hours**.* Happy coding! 🌱`;
+### Contribution Details
+
+- **World:** \`${slot.worldName}\`
+- **Segment:** \`${slot.segmentId}\`
+- **Object:** \`${slot.objectName}\`
+- **Branch:** \`${slot.branchName}\`
+- **Issue:** \`#${issueNumber}\`
+
+### Next Steps
+
+1. Create your branch from \`dev\`.
+2. Register your object using an existing asset.
+3. Add the object placement to the assigned segment.
+4. Submit your PR targeting \`dev\`.
+5. Add **\`Closes #${issueNumber}\`** to your PR description.
+
+Please follow the contribution guidelines before submitting your PR.
+
+Your slot is reserved for **48 hours**.
+
+Thank you for contributing to Growing Worlds.`;
 }
 
 /**
