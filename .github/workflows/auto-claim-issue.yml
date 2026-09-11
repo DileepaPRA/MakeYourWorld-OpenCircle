@@ -132,12 +132,14 @@ jobs:
                 return;
               }
 
-              const rejectionBody = `${rejectionMarker}
-Hi @${commenter}! 👋
-
-This contribution slot is currently assigned to **@${currentAssignee}**.
-
-Please choose another unassigned contribution slot. 🌿`;
+              const rejectionBody = [
+                rejectionMarker,
+                `Hi @${commenter}! 👋`,
+                "",
+                `This contribution slot is currently assigned to **@${currentAssignee}**.`,
+                "",
+                "Please choose another unassigned contribution slot. 🌿",
+              ].join("\n");
 
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
