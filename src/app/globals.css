@@ -74,3 +74,31 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+@keyframes border-beam {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-border-beam {
+  animation: border-beam 3.5s linear infinite;
+}
+
+.bg-grid-paper {
+  background-image: 
+    linear-gradient(to right, rgba(120, 113, 108, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(120, 113, 108, 0.09) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+
+.bg-dot-paper {
+  background-image: radial-gradient(rgba(120, 113, 108, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+

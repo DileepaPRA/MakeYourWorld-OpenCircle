@@ -22,7 +22,13 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-[#FAF8F5]">
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden pt-12 pb-8 sm:pt-16 sm:pb-12 border-b border-stone-200/60">
-        <div className="container mx-auto max-w-5xl px-4 sm:px-6 text-center space-y-6">
+        {/* Decent paper craft background grid with radial fade mask */}
+        <div 
+          className="absolute inset-0 bg-grid-paper pointer-events-none [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-80" 
+          aria-hidden="true" 
+        />
+
+        <div className="container relative z-10 mx-auto max-w-5xl px-4 sm:px-6 text-center space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white/90 px-3.5 py-1 text-xs font-medium text-stone-700 shadow-sm">
             <Sparkles className="h-3.5 w-3.5 text-amber-600" />
             <span>Open Source Educational Diorama</span>
@@ -43,13 +49,26 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <Link href="/worlds">
+            <Link
+              href="/worlds"
+              className="relative group inline-flex rounded-xl p-[2px] overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(52,211,153,0.5)]"
+            >
+              {/* Rotating glowing light beam running around the border */}
+              <div
+                className="absolute inset-[-150%] animate-border-beam"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #34d399 315deg, #a7f3d0 340deg, #ffffff 360deg)",
+                }}
+              />
+
+              {/* Inner dark container button that leaves a 2px track for the light beam */}
               <Button
                 size="lg"
-                className="gap-2 bg-emerald-900 text-white border border-emerald-700/60 shadow-[0_0_12px_rgba(16,185,129,0.15)] transition-all duration-200 ease-out hover:bg-emerald-800 hover:border-emerald-500/80 hover:shadow-[0_0_20px_rgba(16,185,129,0.30)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF8F5]"
+                className="relative z-10 gap-2 bg-emerald-950/95 text-emerald-50 border border-emerald-500/20 transition-all duration-300 hover:bg-emerald-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF8F5]"
               >
-                <Compass className="h-4 w-4" />
-                <span>Explore All Worlds</span>
+                <Compass className="h-4 w-4 text-emerald-300 transition-transform duration-500 group-hover:rotate-45" />
+                <span className="font-semibold tracking-wide">Explore All Worlds</span>
               </Button>
             </Link>
             <Link href="/how-to-contribute">
