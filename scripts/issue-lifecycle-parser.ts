@@ -301,3 +301,48 @@ This contribution slot has been successfully completed and merged into **${slot.
 
 Thank you to the contributor for expanding our growing worlds! Your paper cutout is now a permanent part of the shared diorama.`;
 }
+
+/**
+ * Normalizes and tests whether a comment matches the canonical issue claim phrase:
+ * "Hi! I'd like to work on this issue. Thank you! 🙌"
+ *
+ * Tolerances:
+ * - Leading/trailing whitespace
+ * - Case-insensitive
+ * - Straight or curly apostrophes (' vs ’)
+ * - Optional celebration emoji (🙌)
+ * - Internal whitespace condensation
+ */
+export function isClaimComment(commentBody?: string | null): boolean {
+  if (!commentBody || typeof commentBody !== "string") return false;
+
+  const normalized = commentBody
+    .trim()
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u201B']/g, "'")
+    .replace(/\s+/g, " ");
+
+  const canonicalWithEmoji = "hi! i'd like to work on this issue. thank you! 🙌";
+  const canonicalNoEmoji = "hi! i'd like to work on this issue. thank you!";
+
+  return normalized === canonicalWithEmoji || normalized === canonicalNoEmoji;
+}
+
+/**
+ * Builds the polite response comment when an issue is already claimed/assigned.
+ */
+export function buildAlreadyClaimedComment(
+  issueNumber: number,
+  commenter: string,
+  currentAssignee: string
+): string {
+  const marker = `<!-- growing-worlds:claim-rejected:${issueNumber}:${commenter} -->`;
+
+  return `${marker}
+Hi @${commenter}! 👋
+
+This contribution slot is currently assigned to **@${currentAssignee}**.
+
+Please choose another unassigned contribution slot. 🌿`;
+}
+
