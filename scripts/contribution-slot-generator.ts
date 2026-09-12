@@ -21,6 +21,14 @@ export interface CuratedConcept {
   segmentName: string;
 }
 
+import { EXPANDED_CURATED_CONCEPTS } from "./curated-catalog-data";
+import { CONTRIBUTION_POOL_SIZE, MAX_CREATE_PER_RUN } from "../src/config/contribution-pool";
+
+export { CONTRIBUTION_POOL_SIZE, MAX_CREATE_PER_RUN };
+
+// Backward compatibility alias for legacy imports/tests
+export const TOTAL_POOL_SIZE = CONTRIBUTION_POOL_SIZE;
+
 /**
  * Master catalog of valid contribution concepts mapped to existing verified SVG assets.
  */
@@ -395,25 +403,28 @@ export const CURATED_CONCEPTS: CuratedConcept[] = [
     defaultSegmentId: "alien-03",
     segmentName: "Crystal Geysers",
   },
+  ...EXPANDED_CURATED_CONCEPTS,
 ];
 
-export const TOTAL_POOL_SIZE = 20;
-
 /**
- * Calculates missing slot IDs from the 1..20 pool given existing open slots.
+ * Calculates missing slot IDs from the 1..poolSize pool given existing open available slots.
+ * Supports #01-#99 (2 digits) and #100+ (3+ digits).
  */
-export function calculateMissingSlotIds(existingSlots: string[]): string[] {
+export function calculateMissingSlotIds(
+  existingSlots: string[],
+  poolSize: number = CONTRIBUTION_POOL_SIZE
+): string[] {
   const activeSlotNumbers = new Set(
     existingSlots
       .map((s) => {
         const m = s.match(/(\d+)/);
         return m ? parseInt(m[1], 10) : null;
       })
-      .filter((n): n is number => n !== null && n >= 1 && n <= TOTAL_POOL_SIZE)
+      .filter((n): n is number => n !== null && n >= 1 && n <= poolSize)
   );
 
   const missing: string[] = [];
-  for (let i = 1; i <= TOTAL_POOL_SIZE; i++) {
+  for (let i = 1; i <= poolSize; i++) {
     if (!activeSlotNumbers.has(i)) {
       missing.push(`CONTRIB-SLOT #${String(i).padStart(2, "0")}`);
     }

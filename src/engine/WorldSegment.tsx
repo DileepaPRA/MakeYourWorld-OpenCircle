@@ -1,3 +1,4 @@
+import React from "react";
 import type {
   WorldSegment as WorldSegmentDef,
   WorldObject as WorldObjectDef,
@@ -39,9 +40,11 @@ export function WorldSegment({ segment, objects, placements }: WorldSegmentProps
           const objectDef = objectsMap.get(placement.objectId);
           if (!objectDef) return null;
 
+          const placementKey = placement.id || `${placement.objectId}-${idx}`;
+
           return (
             <WorldObject
-              key={`${placement.objectId}-${idx}`}
+              key={placementKey}
               objectDef={objectDef}
               placement={placement}
             />

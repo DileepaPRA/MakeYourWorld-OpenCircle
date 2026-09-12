@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="paper-shadow-soft" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0a140f" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0a140f" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="sky-grad-7" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BED6CB"/>
+      <stop offset="60%" stop-color="#DFEBE3"/>
+      <stop offset="100%" stop-color="#EDF3EF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Sunken sheltered opening -->
+  <rect width="1600" height="900" fill="#DFEBE3"/>
+  <rect width="1600" height="460" fill="url(#sky-grad-7)" opacity="0.9"/>
+
+  <!-- Distant Moody Peaks -->
+  <g filter="url(#paper-shadow-soft)">
+    <polygon points="0,420 260,290 540,430 820,280 1100,430 1360,290 1600,410 1600,600 0,600" fill="#6E9080" opacity="0.85"/>
+  </g>
+
+  <!-- Deep Wooded Ridge Crest -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,500 Q 320,440 680,480 T 1320,450 T 1600,490 L 1600,750 L 0,750 Z" fill="#3D644F"/>
+    <polygon points="140,460 155,415 170,460" fill="#2A4838"/>
+    <polygon points="460,470 475,425 490,470" fill="#2A4838"/>
+    <polygon points="860,455 875,405 890,455" fill="#2A4838"/>
+    <polygon points="1220,450 1235,400 1250,450" fill="#2A4838"/>
+  </g>
+
+  <!-- Ancient Mossy Roots and Slopes framing the hollow -->
+  <g filter="url(#paper-shadow-soft)">
+    <!-- Left gnarled root mound -->
+    <path d="M 0,560 Q 220,530 380,620 L 280,720 L 0,680 Z" fill="#2E503E"/>
+    <!-- Right root slope -->
+    <path d="M 1600,550 Q 1380,520 1200,610 L 1300,720 L 1600,670 Z" fill="#2E503E"/>
+  </g>
+
+  <!-- Sunken Hollow Basin Floor -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,620 Q 500,680 1000,630 T 1600,650 L 1600,900 L 0,900 Z" fill="#28503C"/>
+  </g>
+
+  <!-- Sheltered Dell Terrace -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,710 Q 420,740 850,700 T 1600,720 L 1600,900 L 0,900 Z" fill="#1F3F2F"/>
+  </g>
+
+  <!-- Foreground Ancient Humus Soil -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,790 Q 360,760 760,800 T 1600,770 L 1600,900 L 0,900 Z" fill="#162F22"/>
+  </g>
+</svg>

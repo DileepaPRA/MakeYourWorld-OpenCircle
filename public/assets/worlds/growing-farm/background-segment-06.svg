@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="farm-shadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#451a03" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#451a03" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="sky-grad-growing-farm-6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BAE6FD"/>
+      <stop offset="60%" stop-color="#FEF08A"/>
+      <stop offset="100%" stop-color="#FEF9C3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Sunflower Meadows diorama backdrop -->
+  <rect width="1600" height="900" fill="#FEF08A"/>
+  <rect width="1600" height="500" fill="url(#sky-grad-growing-farm-6)" opacity="0.9"/>
+
+  <!-- Farm Red Barn Silhouette -->
+  <g filter="url(#farm-shadow)">
+    <rect x="260" y="400" width="260" height="190" fill="#991B1B" stroke="#7F1D1D" stroke-width="2"/>
+    <polygon points="230,400 390,290 550,400" fill="#7F1D1D" stroke="#450A0A" stroke-width="2"/>
+    <rect x="340" y="480" width="90" height="110" fill="#FFFFFF"/>
+    <line x1="340" y1="480" x2="430" y2="590" stroke="#7F1D1D" stroke-width="3"/>
+    <line x1="340" y1="590" x2="430" y2="480" stroke="#7F1D1D" stroke-width="3"/>
+  </g>
+  <!-- Cultivated Furrow Rows / Golden Path -->
+  <g filter="url(#farm-shadow)">
+    <path d="M 0 680 Q 420 630 880 670 T 1600 640 L 1600 900 L 0 900 Z" fill="#3F6212"/>
+    <path d="M 0 780 Q 450 720 900 760 T 1600 740 L 1600 870 Q 900 840 450 860 T 0 900 Z" fill="#D97706" opacity="0.9"/>
+  </g>
+</svg>

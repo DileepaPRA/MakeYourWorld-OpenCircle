@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="campus-shadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#1e1b4b" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1e1b4b" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="sky-grad-growing-campus-9" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BAE6FD"/>
+      <stop offset="60%" stop-color="#E0E7FF"/>
+      <stop offset="100%" stop-color="#FEF3C7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Campus Amphitheater diorama backdrop -->
+  <rect width="1600" height="900" fill="#E0E7FF"/>
+  <rect width="1600" height="500" fill="url(#sky-grad-growing-campus-9)" opacity="0.9"/>
+
+  <!-- Collegiate Brick Academic Hall Silhouette -->
+  <g filter="url(#campus-shadow)">
+    <rect x="360" y="320" width="340" height="340" fill="#991B1B" stroke="#7F1D1D" stroke-width="2"/>
+    <polygon points="330,320 530,210 730,320" fill="#7F1D1D" stroke="#450A0A" stroke-width="2"/>
+    <!-- Classical Windows -->
+    <rect x="410" y="360" width="40" height="60" rx="3" fill="#FEF08A"/>
+    <rect x="510" y="360" width="40" height="60" rx="3" fill="#FEF08A"/>
+    <rect x="610" y="360" width="40" height="60" rx="3" fill="#FEF08A"/>
+    <rect x="410" y="460" width="40" height="60" rx="3" fill="#FEF08A"/>
+    <rect x="510" y="460" width="40" height="60" rx="3" fill="#FEF08A"/>
+    <rect x="610" y="460" width="40" height="60" rx="3" fill="#FEF08A"/>
+    <!-- Clock Tower -->
+    <rect x="500" y="150" width="60" height="170" fill="#7F1D1D"/>
+    <circle cx="530" cy="190" r="18" fill="#FFFFFF" stroke="#1E1B4B" stroke-width="2"/>
+  </g>
+  <!-- Quad Lawn & Stone Plaza -->
+  <g filter="url(#campus-shadow)">
+    <path d="M 0 650 Q 450 610 900 640 T 1600 620 L 1600 900 L 0 900 Z" fill="#15803D"/>
+    <polygon points="600,640 1000,640 1220,900 380,900" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1.5"/>
+  </g>
+</svg>

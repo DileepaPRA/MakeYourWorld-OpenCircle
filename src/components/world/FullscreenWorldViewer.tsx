@@ -50,7 +50,7 @@ export function FullscreenWorldViewer({
       role="dialog"
       aria-modal="true"
       aria-labelledby="fullscreen-world-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 p-4 sm:p-6 md:p-8 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-950/80 p-4 sm:p-6 md:p-8 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -97,7 +97,7 @@ export function FullscreenWorldViewer({
 
         {/* Interactive World Viewport and Navigation */}
         <div className="pt-2">
-          <World world={world} />
+          <World world={world} showTitle={false} />
         </div>
       </div>
     </div>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="universe-shadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000005" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000005" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="sky-grad-growing-universe-10" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#090A16"/>
+      <stop offset="60%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Cosmic Void Edge diorama backdrop -->
+  <rect width="1600" height="900" fill="#1E1B4B"/>
+  <rect width="1600" height="500" fill="url(#sky-grad-growing-universe-10)" opacity="0.9"/>
+
+  <!-- Distant Stardust Points -->
+  <g opacity="0.75">
+    <circle cx="140" cy="100" r="1.5" fill="#FFFFFF"/>
+    <circle cx="320" cy="110" r="2" fill="#FEF08A"/>
+    <circle cx="560" cy="170" r="2.5" fill="#E0E7FF"/>
+    <circle cx="780" cy="200" r="1.5" fill="#FFFFFF"/>
+    <circle cx="990" cy="150" r="2" fill="#FEF08A"/>
+    <circle cx="1210" cy="220" r="2.5" fill="#E0E7FF"/>
+    <circle cx="1440" cy="240" r="1.5" fill="#FFFFFF"/>
+  </g>
+  <!-- Cosmic Nebula Paper Clouds -->
+  <g opacity="0.35" filter="url(#universe-shadow)">
+    <path d="M 100,320 Q 400,220 800,280 T 1500,260 L 1550,480 Q 1100,560 650,510 T 50,460 Z" fill="#4C1D95"/>
+  </g>
+  <!-- Celestial Body Cutout -->
+  <g filter="url(#universe-shadow)">
+    <circle cx="800" cy="340" r="85" fill="#1E1B4B" stroke="#6366F1" stroke-width="2"/>
+    <circle cx="820" cy="325" r="75" fill="#0F172A" opacity="0.8"/>
+  </g>
+  <!-- Orbital Trajectory Ribbon -->
+  <path d="M -100 680 Q 800 350 1700 640" fill="none" stroke="#4F46E5" stroke-width="2" stroke-dasharray="8,8" opacity="0.4"/>
+</svg>
