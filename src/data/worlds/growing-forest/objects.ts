@@ -21,4 +21,12 @@ export const forestObjects: WorldObject[] = [
       githubUsername: "Lazy-Pir8",
     },
   },
+  {
+    id: "red-mushroom",
+    asset: "/assets/worlds/growing-forest/red-mushroom.svg",
+    contributor: {
+      displayName: "Prateek Gupta",
+      githubUsername: "yourprateek",
+    },
+  },
 ];
