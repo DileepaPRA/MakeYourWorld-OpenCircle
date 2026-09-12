@@ -13,4 +13,12 @@ export const cityObjects: WorldObject[] = [
       githubUsername: "marcus-urban",
     },
   },
+  {
+    id: "paper-tram",
+    asset: "/assets/worlds/growing-city/paper-tram.svg",
+    contributor: {
+      displayName: "sajannethsara",
+      githubUsername: "nethsaradws",
+    },
+  },
 ];
