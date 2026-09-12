@@ -77,4 +77,12 @@ export const cityPlacements: ObjectPlacement[] = [
     scale: 1.0,
     rotation: 0,
   },
+  { 
+    objectId: "paper-tram",
+    segmentId: "city-03",
+    x: 40.0,
+    y: 56.0,
+    scale: 1.0,
+    rotation: 0,
+  },
 ];
