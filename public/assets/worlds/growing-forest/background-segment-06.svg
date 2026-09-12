@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="paper-shadow-soft" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0a140f" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0a140f" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="sky-grad-6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C8DDD3"/>
+      <stop offset="60%" stop-color="#E6EFE9"/>
+      <stop offset="100%" stop-color="#F2F7F4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Dappled canopy atmosphere -->
+  <rect width="1600" height="900" fill="#E6EFE9"/>
+  <rect width="1600" height="480" fill="url(#sky-grad-6)" opacity="0.9"/>
+
+  <!-- Paper Clouds in Canopy Opening -->
+  <g opacity="0.75" filter="url(#paper-shadow-soft)">
+    <path d="M 400 140 Q 480 100 580 120 Q 650 90 730 130 Q 800 120 840 160 Q 870 200 810 215 L 440 215 Q 360 185 400 140 Z" fill="#FDFCFA"/>
+  </g>
+
+  <!-- Distant Greenwood Peaks -->
+  <g filter="url(#paper-shadow-soft)">
+    <polygon points="0,440 220,320 460,450 720,290 1000,450 1300,310 1600,430 1600,600 0,600" fill="#759B88" opacity="0.85"/>
+  </g>
+
+  <!-- Midground Fern Grove Ridge -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,515 Q 300,460 620,500 T 1250,470 T 1600,510 L 1600,750 L 0,750 Z" fill="#406954"/>
+    <polygon points="200,480 215,435 230,480" fill="#2E503F"/>
+    <polygon points="520,495 535,450 550,495" fill="#2E503F"/>
+    <polygon points="840,475 855,425 870,475" fill="#2E503F"/>
+    <polygon points="1200,470 1215,425 1230,470" fill="#2E503F"/>
+  </g>
+
+  <!-- Giant Fern Frond Cutouts in Midground -->
+  <g filter="url(#paper-shadow-soft)">
+    <!-- Frond 1 -->
+    <path d="M 120,580 Q 180,510 250,490 Q 210,540 170,590 Z" fill="#325A44"/>
+    <path d="M 170,550 Q 230,500 300,510 Q 250,545 200,575 Z" fill="#3A664E"/>
+    <!-- Frond 2 -->
+    <path d="M 1480,570 Q 1420,500 1350,480 Q 1390,530 1430,580 Z" fill="#325A44"/>
+    <path d="M 1430,540 Q 1370,490 1300,500 Q 1350,535 1400,565 Z" fill="#3A664E"/>
+  </g>
+
+  <!-- Lush Fern Basin Ground Tier -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,610 Q 420,560 860,600 T 1600,570 L 1600,900 L 0,900 Z" fill="#315843"/>
+  </g>
+
+  <!-- Mossy Fern Glade Ground Tier -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,710 Q 360,660 740,700 T 1600,670 L 1600,900 L 0,900 Z" fill="#244736"/>
+  </g>
+
+  <!-- Foreground Deep Forest Floor -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,790 Q 480,740 980,780 T 1600,750 L 1600,900 L 0,900 Z" fill="#183325"/>
+  </g>
+</svg>

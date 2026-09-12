@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { World } from "../src/schemas";
+import { MAX_SEGMENTS_PER_WORLD } from "../src/config/contribution-pool";
 
 export interface IntegrityCheckOptions {
   rootDir?: string;
@@ -27,7 +28,7 @@ export function checkRepositoryIntegrity(
   options: IntegrityCheckOptions = {}
 ): IntegrityAuditResult {
   const rootDir = options.rootDir || process.cwd();
-  const expectedSegmentsCount = options.expectedSegmentsCount ?? 3;
+  const expectedSegmentsCount = options.expectedSegmentsCount ?? MAX_SEGMENTS_PER_WORLD;
   const errors: string[] = [];
 
   let totalObjects = 0;
@@ -63,8 +64,17 @@ export function checkRepositoryIntegrity(
 
     // 3. Check placements
     const segmentIds = new Set(world.segments.map((s) => s.id));
+    const placementIds = new Set<string>();
     for (const placement of world.placements) {
       totalPlacements++;
+      if (placement.id) {
+        if (placementIds.has(placement.id)) {
+          errors.push(
+            `Duplicate placement ID '${placement.id}' found in '${world.id}/placements.ts'. Placement IDs must be unique within a world.`
+          );
+        }
+        placementIds.add(placement.id);
+      }
       if (!objectIds.has(placement.objectId)) {
         errors.push(
           `Placement references undeclared objectId '${placement.objectId}' in '${world.id}/placements.ts'. You must first register this object in objects.ts before placing it.`

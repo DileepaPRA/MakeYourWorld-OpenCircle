@@ -32,6 +32,16 @@ jobs:
             const prUrl = pr.html_url || "";
             const githubUsername = pr.user ? pr.user.login : "";
             const body = pr.body || "";
+            const candidateIssueNumbers = (() => {
+              const pattern =
+                /(?:^|\s|\n|\[|\()\b(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?:\[)?\s*#(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|$)/gi;
+
+              const matches = [...body.matchAll(pattern)]
+                .map((match) => Number(match[1]))
+                .filter((value) => Number.isFinite(value));
+
+              return [...new Set(matches)];
+            })();
 
             console.log("=================================================");
             console.log("Growing Worlds Merged PR Discord Notification");
@@ -157,6 +167,70 @@ jobs:
               return;
             }
 
+            if (candidateIssueNumbers.length === 0) {
+              console.warn(
+                `⚠️ Warning: Merged PR #${prNumber} has no valid linked contribution issue reference in the description. ` +
+                "Skipping Discord notification."
+              );
+              return;
+            }
+
+            let validatedIssueNumber = null;
+
+            if (candidateIssueNumbers.length === 1) {
+              validatedIssueNumber = candidateIssueNumbers[0];
+            } else {
+              console.warn(
+                `⚠️ Warning: Merged PR #${prNumber} references multiple linked issue numbers (${candidateIssueNumbers.join(", ")}). ` +
+                "Skipping Discord notification to avoid guessing the correct contribution issue."
+              );
+              return;
+            }
+
+            let linkedIssue;
+            try {
+              const issueResponse = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: validatedIssueNumber,
+              });
+              linkedIssue = issueResponse.data;
+            } catch (err) {
+              console.warn(
+                `⚠️ Warning: Could not resolve linked issue #${validatedIssueNumber} for PR #${prNumber}. ` +
+                "Skipping Discord notification.",
+                err.message
+              );
+              return;
+            }
+
+            // Keep this predicate aligned with isContributionIssue in scripts/pr-lifecycle-parser.ts.
+            const issueTitle = linkedIssue.title || "";
+            const issueBody = linkedIssue.body || "";
+            const issueLabels = Array.isArray(linkedIssue.labels)
+              ? linkedIssue.labels.map((label) => (typeof label === "string" ? label : label.name || ""))
+              : [];
+            const hasGoodFirstIssueLabel = issueLabels.some(
+              (label) => label.toLowerCase() === "good first issue"
+            );
+            const hasContributionTitle =
+              issueTitle.toLowerCase().includes("[good first issue]") ||
+              issueTitle.toLowerCase().includes("[contrib-slot");
+            const hasWorldFields =
+              issueBody.toLowerCase().includes("target world") &&
+              (issueBody.toLowerCase().includes("contribution slot") ||
+                issueBody.toLowerCase().includes("assigned world segment"));
+
+            if (!hasGoodFirstIssueLabel && !hasContributionTitle && !hasWorldFields) {
+              console.warn(
+                `⚠️ Warning: Linked issue #${validatedIssueNumber} is not a valid Growing Worlds contribution issue. ` +
+                "Skipping Discord notification."
+              );
+              return;
+            }
+
+            console.log(`Resolved valid linked contribution issue: #${validatedIssueNumber}`);
+
             console.log(`Parsed Contributor Info:\n  GitHub:  @${githubUsername}\n  Discord: ${discordUsername}\n`);
 
             // 4. Idempotency Check: search PR comments for the marker before sending
@@ -194,6 +268,7 @@ jobs:
               "",
               `**GitHub:** @${githubUsername}`,
               `**Discord:** ${discordUsername}`,
+              `**Issue:** #${validatedIssueNumber}`,
               `**PR:** #${prNumber}`,
               "",
               "Thank you for contributing to Growing Worlds!",
@@ -210,6 +285,7 @@ jobs:
                   fields: [
                     { name: "GitHub", value: `[@${githubUsername}](https://github.com/${githubUsername})`, inline: true },
                     { name: "Discord", value: discordUsername, inline: true },
+                    { name: "Issue", value: `#${validatedIssueNumber}`, inline: true },
                     { name: "PR", value: `[#${prNumber}](${prUrl})`, inline: true },
                   ],
                   footer: {

@@ -9,8 +9,16 @@ export interface MergedPRNotificationParams {
   githubUsername: string;
   discordUsername: string;
   prNumber: number;
+  issueNumber?: number;
   prUrl?: string;
   prTitle?: string;
+}
+
+export interface ContributionIssueLike {
+  number?: number;
+  title?: string;
+  body?: string;
+  labels?: Array<{ name?: string } | string>;
 }
 
 export interface MergedPRDecisionParams {
@@ -162,6 +170,43 @@ export function getMergedPRIdempotencyMarker(prNumber: number): string {
   return `<!-- growing-worlds:merged-pr-notification:${prNumber} -->`;
 }
 
+export function extractLinkedContributionIssueNumbers(body?: string | null): number[] {
+  if (!body || typeof body !== "string") {
+    return [];
+  }
+
+  const pattern =
+    /(?:^|\s|\n|\[|\()\b(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?:\[)?\s*#(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|$)/gi;
+
+  const issueNumbers = [...body.matchAll(pattern)]
+    .map((match) => Number(match[1]))
+    .filter((value) => Number.isFinite(value));
+
+  return [...new Set(issueNumbers)];
+}
+
+export function isContributionIssue(issue?: ContributionIssueLike | null): boolean {
+  if (!issue) {
+    return false;
+  }
+
+  const title = issue.title ?? "";
+  const labels = Array.isArray(issue.labels)
+    ? issue.labels.map((label) => (typeof label === "string" ? label : label?.name ?? ""))
+    : [];
+  const body = issue.body ?? "";
+
+  const hasGoodFirstIssueLabel = labels.some((label) => label.toLowerCase() === "good first issue");
+  const hasContributionTitle =
+    title.toLowerCase().includes("[good first issue]") ||
+    title.toLowerCase().includes("[contrib-slot");
+  const hasWorldFields =
+    body.toLowerCase().includes("target world") &&
+    (body.toLowerCase().includes("contribution slot") || body.toLowerCase().includes("assigned world segment"));
+
+  return hasGoodFirstIssueLabel || hasContributionTitle || hasWorldFields;
+}
+
 /**
  * Builds the text and webhook payload for the Discord notification.
  * Format requested:
@@ -184,28 +229,40 @@ export function buildMergedNotificationMessage(params: MergedPRNotificationParam
     footer: { text: string };
   };
 } {
-  const { githubUsername, discordUsername, prNumber, prUrl } = params;
+  const { githubUsername, discordUsername, prNumber, issueNumber, prUrl } = params;
 
-  const content = [
+  const contentLines = [
     "🎉 **Contribution Merged!**",
     "",
     `**GitHub:** @${githubUsername}`,
     `**Discord:** ${discordUsername}`,
-    `**PR:** #${prNumber}`,
-    "",
-    "Thank you for contributing to Growing Worlds!",
-  ].join("\n");
+  ];
+
+  if (typeof issueNumber === "number") {
+    contentLines.push(`**Issue:** #${issueNumber}`);
+  }
+
+  contentLines.push(`**PR:** #${prNumber}`, "", "Thank you for contributing to Growing Worlds!");
+
+  const content = contentLines.join("\n");
+
+  const fields = [
+    { name: "GitHub", value: `[@${githubUsername}](https://github.com/${githubUsername})`, inline: true },
+    { name: "Discord", value: discordUsername, inline: true },
+  ];
+
+  if (typeof issueNumber === "number") {
+    fields.push({ name: "Issue", value: `#${issueNumber}`, inline: true });
+  }
+
+  fields.push({ name: "PR", value: prUrl ? `[#${prNumber}](${prUrl})` : `#${prNumber}`, inline: true });
 
   const embed = {
     title: `🎉 Contribution Merged! #${prNumber}`,
     url: prUrl,
     description: `Thank you **@${githubUsername}** for contributing to **Growing Worlds**! 🌿\nYour paper cutout object is now part of the world diorama.`,
     color: 65280, // Vibrant Green
-    fields: [
-      { name: "GitHub", value: `[@${githubUsername}](https://github.com/${githubUsername})`, inline: true },
-      { name: "Discord", value: discordUsername, inline: true },
-      { name: "PR", value: prUrl ? `[#${prNumber}](${prUrl})` : `#${prNumber}`, inline: true },
-    ],
+    fields,
     footer: {
       text: "Growing Worlds • Open source education in action!",
     },

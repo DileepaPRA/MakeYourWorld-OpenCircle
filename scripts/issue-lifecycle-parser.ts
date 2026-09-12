@@ -372,3 +372,19 @@ This contribution slot is currently assigned to **@${currentAssignee}**.
 
 Please choose another unassigned contribution slot. 🌿`;
 }
+
+/**
+ * Evaluates whether an issue lifecycle event should trigger a replenishment workflow dispatch.
+ * Replenishment should only be dispatched upon a genuine, successful assignment on an authentic contribution issue.
+ */
+export function shouldTriggerReplenishment(params: {
+  isContributionIssue: boolean;
+  assignmentSucceeded: boolean;
+  isAlreadyAssigned: boolean;
+}): boolean {
+  if (!params.isContributionIssue) return false;
+  if (params.isAlreadyAssigned) return false;
+  return params.assignmentSucceeded;
+}
+
+export const REPLENISHMENT_WORKFLOW_FILE = "replenish-contribution-slots.yml";

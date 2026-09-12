@@ -1,3 +1,4 @@
+import React from "react";
 import type { Contributor } from "@/schemas";
 
 export interface ContributorLabelProps {

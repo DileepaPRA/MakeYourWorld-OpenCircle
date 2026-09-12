@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="ocean-shadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#021c24" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#021c24" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="sky-grad-growing-ocean-6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="60%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Sunken Shipwreck Reef diorama backdrop -->
+  <rect width="1600" height="900" fill="#0284C7"/>
+  <rect width="1600" height="500" fill="url(#sky-grad-growing-ocean-6)" opacity="0.9"/>
+
+  <!-- Surface Sunlight Paper Light Beams -->
+  <g opacity="0.2">
+    <polygon points="180,0 260,0 480,680 340,680" fill="#FFFFFF"/>
+    <polygon points="620,0 720,0 960,740 820,740" fill="#FFFFFF"/>
+    <polygon points="1120,0 1200,0 1440,700 1320,700" fill="#FFFFFF"/>
+  </g>
+  <!-- Coral Silhouettes -->
+  <g filter="url(#ocean-shadow)">
+    <path d="M 220 620 L 220 540 Q 235 520 250 540 L 250 620" fill="#115E59"/>
+    <path d="M 1320 590 L 1320 520 Q 1340 500 1360 520 L 1360 590" fill="#115E59"/>
+  </g>
+</svg>

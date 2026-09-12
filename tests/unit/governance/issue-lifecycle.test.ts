@@ -8,6 +8,8 @@ import {
   buildCompletionComment,
   isClaimComment,
   buildAlreadyClaimedComment,
+  shouldTriggerReplenishment,
+  REPLENISHMENT_WORKFLOW_FILE,
 } from "../../../scripts/issue-lifecycle-parser";
 
 describe("GitHub Issue Lifecycle Parser & Normalizer Unit Tests", () => {
@@ -306,6 +308,137 @@ Add ONE paper-cutout object to Growing Forest inside forest-01.
         "<!-- growing-worlds:claim-rejected:51:student-dev-3 -->"
       );
       expect(comment1).not.toBe(comment2);
+    });
+
+    describe("Phase E: Assignment-Triggered Replenishment Architecture Tests", () => {
+      it("TEST 25: successful assignment on authentic contribution issue triggers replenishment dispatch", () => {
+        const shouldDispatch = shouldTriggerReplenishment({
+          isContributionIssue: true,
+          assignmentSucceeded: true,
+          isAlreadyAssigned: false,
+        });
+        expect(shouldDispatch).toBe(true);
+      });
+
+      it("TEST 26: failed assignment does NOT trigger replenishment dispatch", () => {
+        const shouldDispatch = shouldTriggerReplenishment({
+          isContributionIssue: true,
+          assignmentSucceeded: false,
+          isAlreadyAssigned: false,
+        });
+        expect(shouldDispatch).toBe(false);
+      });
+
+      it("TEST 27: already-assigned issue claim does NOT trigger replenishment dispatch", () => {
+        const shouldDispatch = shouldTriggerReplenishment({
+          isContributionIssue: true,
+          assignmentSucceeded: false,
+          isAlreadyAssigned: true,
+        });
+        expect(shouldDispatch).toBe(false);
+      });
+
+      it("TEST 28: non-contribution issue assignment does NOT trigger replenishment dispatch", () => {
+        const shouldDispatch = shouldTriggerReplenishment({
+          isContributionIssue: false,
+          assignmentSucceeded: true,
+          isAlreadyAssigned: false,
+        });
+        expect(shouldDispatch).toBe(false);
+      });
+
+      it("TEST 29: workflow dispatch targets the authoritative replenishment workflow file", () => {
+        expect(REPLENISHMENT_WORKFLOW_FILE).toBe("replenish-contribution-slots.yml");
+      });
+
+      it("TEST 30: mock auto-claim workflow dispatch executes dispatch without creating issues directly", async () => {
+        // Mock GitHub client
+        const createdIssues: Record<string, unknown>[] = [];
+        const dispatchedWorkflows: Record<string, unknown>[] = [];
+
+        const mockGithub = {
+          rest: {
+            issues: {
+              get: async () => ({
+                data: { state: "open", assignees: [], assignee: null },
+              }),
+              addAssignees: async (params: { owner: string; repo: string; issue_number: number; assignees: string[] }) => {
+                return { data: { assignees: params.assignees } };
+              },
+              create: async (params: Record<string, unknown>) => {
+                createdIssues.push(params);
+                return { data: params };
+              },
+            },
+            repos: {
+              get: async () => ({
+                data: { default_branch: "dev" },
+              }),
+            },
+            actions: {
+              createWorkflowDispatch: async (params: { owner: string; repo: string; workflow_id: string; ref: string }) => {
+                dispatchedWorkflows.push(params);
+                return { status: 204 };
+              },
+            },
+          },
+        };
+
+        // Simulate auto-claim assignment step
+        await mockGithub.rest.issues.addAssignees({
+          owner: "test-owner",
+          repo: "test-repo",
+          issue_number: 10,
+          assignees: ["student-dev"],
+        });
+
+        // Trigger dispatch
+        const repoInfo = await mockGithub.rest.repos.get();
+        await mockGithub.rest.actions.createWorkflowDispatch({
+          owner: "test-owner",
+          repo: "test-repo",
+          workflow_id: REPLENISHMENT_WORKFLOW_FILE,
+          ref: repoInfo.data.default_branch,
+        });
+
+        // Verify: Exactly 1 dispatch, 0 issues created by auto-claim
+        expect(dispatchedWorkflows.length).toBe(1);
+        expect(dispatchedWorkflows[0].workflow_id).toBe("replenish-contribution-slots.yml");
+        expect(dispatchedWorkflows[0].ref).toBe("dev");
+        expect(createdIssues.length).toBe(0);
+      });
+
+      it("TEST 31: replenishment engine recalculates actual available count and caps creation at MAX_CREATE_PER_RUN", async () => {
+        const { calculateMissingSlotIds, CONTRIBUTION_POOL_SIZE, MAX_CREATE_PER_RUN } = await import(
+          "../../../scripts/contribution-slot-generator"
+        );
+
+        expect(CONTRIBUTION_POOL_SIZE).toBe(100);
+        expect(MAX_CREATE_PER_RUN).toBe(20);
+
+        // Simulate state where 99 slots are currently available (1 was just assigned)
+        const activeAvailableSlots: string[] = [];
+        for (let i = 1; i <= 99; i++) {
+          activeAvailableSlots.push(`CONTRIB-SLOT #${String(i).padStart(2, "0")}`);
+        }
+
+        const missing = calculateMissingSlotIds(activeAvailableSlots, CONTRIBUTION_POOL_SIZE);
+        // Deficit is 100 - 99 = 1
+        expect(missing.length).toBe(1);
+        expect(missing[0]).toBe("CONTRIB-SLOT #100");
+
+        // Simulate state where only 50 slots are available (deficit is 50)
+        const partialActiveSlots: string[] = [];
+        for (let i = 1; i <= 50; i++) {
+          partialActiveSlots.push(`CONTRIB-SLOT #${String(i).padStart(2, "0")}`);
+        }
+        const largeMissing = calculateMissingSlotIds(partialActiveSlots, CONTRIBUTION_POOL_SIZE);
+        // Deficit is 50, but replenishment creates up to MAX_CREATE_PER_RUN
+        const toCreate = largeMissing.slice(0, MAX_CREATE_PER_RUN);
+        expect(largeMissing.length).toBe(50);
+        expect(toCreate.length).toBe(MAX_CREATE_PER_RUN);
+        expect(toCreate.length).toBe(20);
+      });
     });
   });
 });

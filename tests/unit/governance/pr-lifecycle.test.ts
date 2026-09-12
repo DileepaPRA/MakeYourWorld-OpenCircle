@@ -4,6 +4,8 @@ import {
   getMergedPRIdempotencyMarker,
   buildMergedNotificationMessage,
   shouldSendMergedPRNotification,
+  extractLinkedContributionIssueNumbers,
+  isContributionIssue,
 } from "../../../scripts/pr-lifecycle-parser";
 
 describe("PR Lifecycle Parser & Merged Notification Unit Tests", () => {
@@ -155,5 +157,105 @@ Closes #123
 
     expect(decision.shouldSend).toBe(false);
     expect(decision.reason).toContain("Idempotency marker detected");
+  });
+
+  it("TEST 8: Closes #104 resolves the linked contribution issue number", () => {
+    const body = "Closes #104";
+    expect(extractLinkedContributionIssueNumbers(body)).toEqual([104]);
+  });
+
+  it("TEST 9: Fixes #104 resolves the linked contribution issue number", () => {
+    const body = "Fixes #104";
+    expect(extractLinkedContributionIssueNumbers(body)).toEqual([104]);
+  });
+
+  it("TEST 10: Resolves #104 resolves the linked contribution issue number", () => {
+    const body = "Resolves #104";
+    expect(extractLinkedContributionIssueNumbers(body)).toEqual([104]);
+  });
+
+  it("TEST 11: lowercase and mixed-case close keywords are supported", () => {
+    expect(extractLinkedContributionIssueNumbers("closes #104")).toEqual([104]);
+    expect(extractLinkedContributionIssueNumbers("FiXeS #104")).toEqual([104]);
+    expect(extractLinkedContributionIssueNumbers("resolved #104")).toEqual([104]);
+  });
+
+  it("TEST 12: PR body with no linked issue does not resolve any issue number", () => {
+    expect(extractLinkedContributionIssueNumbers("Just a normal update")).toEqual([]);
+  });
+
+  it("TEST 13: multiple closing references are preserved as separate candidate issue numbers", () => {
+    const body = "Closes #104\nFixes #105";
+    expect(extractLinkedContributionIssueNumbers(body)).toEqual([104, 105]);
+  });
+
+  it("TEST 14: contribution issue validation accepts the project's contribution issue pattern", () => {
+    const issue = {
+      number: 104,
+      title: "[Good First Issue] Add a butterfly to Growing Forest",
+      body: "### Target World\nGrowing Forest\n### Contribution Slot\nA1",
+      labels: [{ name: "good first issue" }],
+    };
+
+    expect(isContributionIssue(issue)).toBe(true);
+  });
+
+  it("TEST 15: ordinary issues are rejected as contribution issues", () => {
+    expect(
+      isContributionIssue({
+        number: 999,
+        title: "General project question",
+        body: "Could we document the setup process?",
+        labels: [{ name: "question" }],
+      })
+    ).toBe(false);
+  });
+
+  it("TEST 16: nonexistent or missing issues are rejected safely", () => {
+    expect(isContributionIssue(null)).toBe(false);
+    expect(isContributionIssue(undefined)).toBe(false);
+  });
+
+  it("TEST 17: merged PR message includes linked issue and PR number separately", () => {
+    const payload = buildMergedNotificationMessage({
+      githubUsername: "ShenSandaru",
+      discordUsername: "ShenSandaru",
+      prNumber: 123,
+      issueNumber: 104,
+      prUrl: "https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/pull/123",
+      prTitle: "Add Butterfly to Growing Forest",
+    });
+
+    expect(payload.content).toContain("**PR:** #123");
+    expect(payload.content).toContain("**Issue:** #104");
+    expect(payload.content).not.toContain("**Issue:** #123");
+  });
+
+  it("TEST 18: idempotency marker still uses the PR number, not the issue number", () => {
+    const marker = getMergedPRIdempotencyMarker(123);
+    expect(marker).toBe("<!-- growing-worlds:merged-pr-notification:123 -->");
+    expect(marker).not.toContain("104");
+  });
+
+  it("TEST 19: missing Discord username still blocks notification", () => {
+    const decision = shouldSendMergedPRNotification({
+      isMerged: true,
+      hasIdempotencyMarker: false,
+      discordUsername: null,
+    });
+
+    expect(decision.shouldSend).toBe(false);
+    expect(decision.reason).toContain("No valid Discord username found");
+  });
+
+  it("TEST 20: valid merged contribution PRs with a valid issue still notify successfully", () => {
+    const discordUsername = extractDiscordUsername(standardPRBody);
+    const decision = shouldSendMergedPRNotification({
+      isMerged: true,
+      hasIdempotencyMarker: false,
+      discordUsername,
+    });
+
+    expect(decision.shouldSend).toBe(true);
   });
 });

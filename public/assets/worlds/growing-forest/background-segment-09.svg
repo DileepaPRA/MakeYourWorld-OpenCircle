@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="paper-shadow-soft" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0a140f" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0a140f" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="sky-grad-9" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#CFE2D8"/>
+      <stop offset="60%" stop-color="#EBF3ED"/>
+      <stop offset="100%" stop-color="#FAF5EB"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Sun-dappled warm clearing -->
+  <rect width="1600" height="900" fill="#EBF3ED"/>
+  <rect width="1600" height="480" fill="url(#sky-grad-9)" opacity="0.9"/>
+
+  <!-- Warm Golden Sun Disc (Torn Paper Circle) -->
+  <circle cx="1240" cy="190" r="75" fill="#FCE9BD" opacity="0.85" filter="url(#paper-shadow-soft)"/>
+  <circle cx="1240" cy="190" r="55" fill="#FFF6DC" opacity="0.95"/>
+
+  <!-- Fluffy Cloud Cutouts -->
+  <g opacity="0.8" filter="url(#paper-shadow-soft)">
+    <path d="M 220 160 Q 300 120 400 140 Q 470 110 550 150 Q 610 140 650 180 Q 670 220 610 230 L 260 230 Q 190 200 220 160 Z" fill="#FDFCFA"/>
+  </g>
+
+  <!-- Distant Soft Hills -->
+  <g filter="url(#paper-shadow-soft)">
+    <polygon points="0,460 220,340 460,470 720,320 980,470 1280,330 1600,450 1600,600 0,600" fill="#759A89" opacity="0.85"/>
+  </g>
+
+  <!-- Midground Woodland Clearing Ridge -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,530 Q 300,480 620,520 T 1250,490 T 1600,530 L 1600,750 L 0,750 Z" fill="#46725B"/>
+    <polygon points="200,495 215,450 230,495" fill="#325945"/>
+    <polygon points="580,510 595,465 610,510" fill="#325945"/>
+    <polygon points="920,490 935,440 950,490" fill="#325945"/>
+  </g>
+
+  <!-- Vibrant Wildflower Meadow Basin -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,620 Q 450,560 900,600 T 1600,570 L 1600,900 L 0,900 Z" fill="#36634C"/>
+  </g>
+
+  <!-- Paper Flower Bloom Dots / Petals in Distance -->
+  <g opacity="0.85">
+    <!-- Golden buttercup dots -->
+    <circle cx="250" cy="620" r="4" fill="#FDE047"/>
+    <circle cx="380" cy="640" r="3.5" fill="#FDE047"/>
+    <circle cx="520" cy="615" r="4" fill="#FDE047"/>
+    <circle cx="820" cy="630" r="4" fill="#FDE047"/>
+    <circle cx="1140" cy="610" r="4.5" fill="#FDE047"/>
+    <circle cx="1380" cy="625" r="3.5" fill="#FDE047"/>
+    <!-- Wild rose pink dots -->
+    <circle cx="310" cy="635" r="3.5" fill="#F472B6"/>
+    <circle cx="680" cy="625" r="4" fill="#F472B6"/>
+    <circle cx="990" cy="620" r="4" fill="#F472B6"/>
+    <circle cx="1260" cy="635" r="3.5" fill="#F472B6"/>
+  </g>
+
+  <!-- Sunlit Glade Terrace (Warm Moss Green) -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,710 Q 380,660 760,700 T 1600,670 L 1600,900 L 0,900 Z" fill="#29513D"/>
+  </g>
+
+  <!-- Foreground Wildflower Meadow Floor -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,790 Q 500,740 1020,780 T 1600,750 L 1600,900 L 0,900 Z" fill="#1B3828"/>
+  </g>
+</svg>

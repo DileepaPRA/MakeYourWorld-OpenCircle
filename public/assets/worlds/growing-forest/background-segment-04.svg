@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="paper-shadow-soft" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0a140f" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0a140f" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="sky-grad-4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C4DBD1"/>
+      <stop offset="60%" stop-color="#E2ECE5"/>
+      <stop offset="100%" stop-color="#EFF5F1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Crisp river morning -->
+  <rect width="1600" height="900" fill="#E2ECE5"/>
+  <rect width="1600" height="480" fill="url(#sky-grad-4)" opacity="0.9"/>
+
+  <!-- Distant Clouds (Torn Paper Cutouts) -->
+  <g opacity="0.8" filter="url(#paper-shadow-soft)">
+    <path d="M 200 150 Q 280 110 380 130 Q 450 100 520 140 Q 580 130 620 170 Q 640 210 580 220 L 240 220 Q 180 190 200 150 Z" fill="#FDFCFA"/>
+    <path d="M 1050 130 Q 1140 90 1230 110 Q 1300 90 1370 130 Q 1420 120 1460 160 Q 1480 200 1420 210 L 1080 210 Q 1010 180 1050 130 Z" fill="#FDFCFA"/>
+  </g>
+
+  <!-- Distant Mountain Peaks -->
+  <g filter="url(#paper-shadow-soft)">
+    <polygon points="0,460 210,330 430,470 690,310 970,480 1260,320 1490,450 1600,380 1600,600 0,600" fill="#719383" opacity="0.85"/>
+  </g>
+
+  <!-- Midground Woodland Foothills -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,520 Q 280,470 600,510 T 1200,480 T 1600,520 L 1600,750 L 0,750 Z" fill="#3E6551"/>
+    <polygon points="180,485 195,440 210,485" fill="#2C4B3B"/>
+    <polygon points="560,505 575,455 590,505" fill="#2C4B3B"/>
+    <polygon points="880,485 895,435 910,485" fill="#2C4B3B"/>
+    <polygon points="1320,490 1335,445 1350,490" fill="#2C4B3B"/>
+  </g>
+
+  <!-- River Basin Meadow Terraces -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,620 Q 400,570 820,610 T 1600,580 L 1600,900 L 0,900 Z" fill="#2F5641"/>
+  </g>
+
+  <!-- Winding Paper River Ribbon -->
+  <path d="M 680,610 Q 620,680 720,740 T 640,820 T 750,900 L 920,900 Q 820,820 890,740 T 780,680 T 840,610 Z" fill="#7CB6A5" opacity="0.9" filter="url(#paper-shadow-soft)"/>
+  <ellipse cx="760" cy="740" rx="35" ry="14" fill="#B2D8CD" opacity="0.6"/>
+
+  <!-- Stepping Stones Paper Cutouts -->
+  <g filter="url(#paper-shadow-soft)">
+    <ellipse cx="670" cy="710" rx="28" ry="14" fill="#8C9A8E"/>
+    <ellipse cx="735" cy="750" rx="32" ry="16" fill="#7E8D81"/>
+    <ellipse cx="800" cy="790" rx="26" ry="13" fill="#8C9A8E"/>
+  </g>
+
+  <!-- Near Riverbank Ground Tier -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,730 Q 320,680 620,720 L 590,900 L 0,900 Z" fill="#244734"/>
+    <path d="M 980,710 Q 1300,670 1600,710 L 1600,900 L 930,900 Z" fill="#244734"/>
+  </g>
+
+  <!-- Foreground Forest Floor (Dark Earth) -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,810 Q 380,760 700,810 T 1600,780 L 1600,900 L 0,900 Z" fill="#173224"/>
+  </g>
+</svg>

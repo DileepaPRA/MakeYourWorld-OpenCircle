@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="paper-shadow-soft" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0a140f" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0a140f" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="sky-grad-8" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#B5D1C3"/>
+      <stop offset="60%" stop-color="#DBE7DF"/>
+      <stop offset="100%" stop-color="#ECF2EE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: High alpine pine crest breeze -->
+  <rect width="1600" height="900" fill="#DBE7DF"/>
+  <rect width="1600" height="480" fill="url(#sky-grad-8)" opacity="0.9"/>
+
+  <!-- High Mountain Ridge Peaks -->
+  <g filter="url(#paper-shadow-soft)">
+    <polygon points="0,410 190,260 410,390 650,230 910,400 1190,240 1440,380 1600,290 1600,600 0,600" fill="#6A8D7D" opacity="0.85"/>
+  </g>
+
+  <!-- Pine Crest Evergreen Silhouette Ridge -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,490 Q 280,440 580,475 T 1200,450 T 1600,480 L 1600,750 L 0,750 Z" fill="#3A614C"/>
+    <!-- Tall Pine Cutouts -->
+    <polygon points="100,450 120,380 140,450" fill="#244433"/>
+    <polygon points="260,465 280,395 300,465" fill="#244433"/>
+    <polygon points="440,440 460,370 480,440" fill="#244433"/>
+    <polygon points="720,460 740,390 760,460" fill="#244433"/>
+    <polygon points="980,445 1000,375 1020,445" fill="#244433"/>
+    <polygon points="1260,440 1280,370 1300,440" fill="#244433"/>
+    <polygon points="1460,455 1480,385 1500,455" fill="#244433"/>
+  </g>
+
+  <!-- Midground Pine Crest Slopes -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,580 Q 420,520 860,560 T 1600,530 L 1600,900 L 0,900 Z" fill="#2A4F3B"/>
+    <!-- Prominent pine stand -->
+    <polygon points="320,535 345,460 370,535" fill="#1B3828"/>
+    <polygon points="820,550 845,475 870,550" fill="#1B3828"/>
+    <polygon points="1350,520 1375,445 1400,520" fill="#1B3828"/>
+  </g>
+
+  <!-- Upper Mountain Terrace -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,680 Q 360,630 780,670 T 1600,640 L 1600,900 L 0,900 Z" fill="#20402F"/>
+  </g>
+
+  <!-- Foreground Evergreen Ridge Base -->
+  <g filter="url(#paper-shadow-soft)">
+    <path d="M 0,770 Q 480,720 980,760 T 1600,730 L 1600,900 L 0,900 Z" fill="#142B1E"/>
+  </g>
+</svg>

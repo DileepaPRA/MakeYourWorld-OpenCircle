@@ -3,7 +3,8 @@ import {
   selectFreshConcept,
   generateContributionSlotIssue,
   calculateMissingSlotIds,
-  TOTAL_POOL_SIZE,
+  CONTRIBUTION_POOL_SIZE,
+  MAX_CREATE_PER_RUN,
   GeneratedSlotIssue,
 } from "./contribution-slot-generator";
 
@@ -11,19 +12,25 @@ export interface ReplenishInput {
   activeSlots: string[];
   activeAssignments: { worldId: string; objectName: string }[];
   maxPerRun?: number;
+  poolSize?: number;
+  totalOpenCount?: number;
+  assignedCount?: number;
 }
 
 export interface ReplenishOutput {
   targetPoolSize: number;
   openContributionCount: number;
+  availableContributionCount: number;
+  assignedContributionCount: number;
   missingSlotCount: number;
   slotsToCreate: string[];
   generatedIssues: GeneratedSlotIssue[];
 }
 
 export function computeReplenishment(input: ReplenishInput): ReplenishOutput {
-  const maxPerRun = input.maxPerRun ?? TOTAL_POOL_SIZE;
-  const missingSlots = calculateMissingSlotIds(input.activeSlots);
+  const targetPoolSize = input.poolSize ?? CONTRIBUTION_POOL_SIZE;
+  const maxPerRun = input.maxPerRun ?? MAX_CREATE_PER_RUN;
+  const missingSlots = calculateMissingSlotIds(input.activeSlots, targetPoolSize);
   const slotsToCreate = missingSlots.slice(0, maxPerRun);
 
   const generatedIssues: GeneratedSlotIssue[] = [];
@@ -39,9 +46,15 @@ export function computeReplenishment(input: ReplenishInput): ReplenishOutput {
     });
   }
 
+  const availableCount = input.activeSlots.length;
+  const assignedCount = input.assignedCount ?? 0;
+  const totalOpenCount = input.totalOpenCount ?? (availableCount + assignedCount);
+
   return {
-    targetPoolSize: TOTAL_POOL_SIZE,
-    openContributionCount: input.activeSlots.length,
+    targetPoolSize,
+    openContributionCount: totalOpenCount,
+    availableContributionCount: availableCount,
+    assignedContributionCount: assignedCount,
     missingSlotCount: missingSlots.length,
     slotsToCreate,
     generatedIssues,

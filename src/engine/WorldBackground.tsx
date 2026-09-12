@@ -1,3 +1,4 @@
+import React from "react";
 import type { Background } from "@/schemas";
 
 export interface WorldBackgroundProps {

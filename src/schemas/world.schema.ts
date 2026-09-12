@@ -55,8 +55,21 @@ export const WorldSchema = z
       segmentIds.add(seg.id);
     });
 
-    // 3. Verify every placement references a declared object in objects AND a declared segment
+    // 3. Verify every placement references a declared object in objects AND a declared segment,
+    // and verify that placement IDs (when provided) are unique across the world.
+    const placementIds = new Set<string>();
     world.placements.forEach((placement, index) => {
+      if (placement.id) {
+        if (placementIds.has(placement.id)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Duplicate placement ID '${placement.id}' found at placements[${index}]`,
+            path: ["placements", index, "id"],
+          });
+        }
+        placementIds.add(placement.id);
+      }
+
       if (!objectIds.has(placement.objectId)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
