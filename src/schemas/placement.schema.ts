@@ -1,11 +1,21 @@
 import { z } from "zod";
+import { ContributorSchema } from "./contributor.schema";
 
 /**
  * ObjectPlacement schema for Step 2 of the contributor workflow.
  * Uses normalized coordinates (0 to 100) and explicitly declares which segment it belongs to.
+ * Supports an optional unique placement instance ID and optional placement-level contributor.
  * Target size: 1–10 meaningful LOC.
  */
 export const ObjectPlacementSchema = z.object({
+  id: z
+    .string()
+    .trim()
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      "Placement ID must be kebab-case (e.g. 'forest-pine-tree-01')"
+    )
+    .optional(),
   objectId: z
     .string()
     .trim()
@@ -44,6 +54,7 @@ export const ObjectPlacementSchema = z.object({
     .min(-360, "Rotation must be at least -360 degrees")
     .max(360, "Rotation must be at most 360 degrees")
     .optional(),
+  contributor: ContributorSchema.optional(),
 });
 
 export type ObjectPlacement = z.infer<typeof ObjectPlacementSchema>;

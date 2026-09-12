@@ -36,4 +36,74 @@ export const villageSegments: WorldSegment[] = [
       altText: "Lively village market square with colorful stalls and central stone well",
     },
   },
+  {
+    id: "village-04",
+    order: 3,
+    name: "Artisan Workshop Quarter",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-04.svg",
+      cssGradient: "linear-gradient(to bottom, #FED7AA, #FFEDD5, #78350F)",
+      altText: "Timber-framed craft workshops with smoking chimneys and clay pots",
+    },
+  },
+  {
+    id: "village-05",
+    order: 4,
+    name: "Festive Village Green",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-05.svg",
+      cssGradient: "linear-gradient(to bottom, #BAE6FD, #FEF08A, #4D7C0F)",
+      altText: "Open grassy pasture with decorative pennants and rustic paper benches",
+    },
+  },
+  {
+    id: "village-06",
+    order: 5,
+    name: "Old Mill Pond",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-06.svg",
+      cssGradient: "linear-gradient(to bottom, #E0F2FE, #A7F3D0, #14532D)",
+      altText: "Still water basin framed by weeping willow cutouts and cattails",
+    },
+  },
+  {
+    id: "village-07",
+    order: 6,
+    name: "Orchard Lane",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-07.svg",
+      cssGradient: "linear-gradient(to bottom, #FEF9C3, #DCFCE7, #15803D)",
+      altText: "Winding earth path flanked by blooming fruit trees and low stone walls",
+    },
+  },
+  {
+    id: "village-08",
+    order: 7,
+    name: "Timber Bridge",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-08.svg",
+      cssGradient: "linear-gradient(to bottom, #E0E7FF, #C7D2FE, #4338CA)",
+      altText: "Rustic arched wooden bridge crossing a sparkling clear creek",
+    },
+  },
+  {
+    id: "village-09",
+    order: 8,
+    name: "Bakers Row",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-09.svg",
+      cssGradient: "linear-gradient(to bottom, #FFEDD5, #FED7AA, #9A3412)",
+      altText: "Warm stone storefronts with paper bread displays and flower boxes",
+    },
+  },
+  {
+    id: "village-10",
+    order: 9,
+    name: "Hillside Chapel",
+    background: {
+      asset: "/assets/worlds/growing-village/background-segment-10.svg",
+      cssGradient: "linear-gradient(to bottom, #FCE7F3, #EDE9FE, #5B21B6)",
+      altText: "Quiet stone tower chapel overlooking the rooftops from a grassy knoll",
+    },
+  },
 ];

@@ -1,3 +1,4 @@
+import React from "react";
 import type { WorldObject as WorldObjectDef, ObjectPlacement } from "@/schemas";
 import { calculatePositionStyle } from "./positioning/math";
 import { ContributorLabel } from "./ContributorLabel";
@@ -20,6 +21,11 @@ export function WorldObject({ objectDef, placement }: WorldObjectProps) {
     placement.rotation
   );
 
+  const effectiveContributor = placement.contributor || objectDef.contributor;
+  const placementTestId = placement.id
+    ? `world-placement-${placement.id}`
+    : `world-object-${objectDef.id}`;
+
   return (
     <div
       className="absolute flex flex-col items-center pointer-events-auto transition-transform duration-300 ease-out hover:z-[2000]"
@@ -29,8 +35,9 @@ export function WorldObject({ objectDef, placement }: WorldObjectProps) {
         transform: style.transform,
         zIndex: style.zIndex,
       }}
-      data-testid={`world-object-${objectDef.id}`}
+      data-testid={placementTestId}
       data-object-id={objectDef.id}
+      data-placement-id={placement.id}
     >
       <div className="relative flex items-center justify-center filter drop-shadow-[0_6px_6px_rgba(10,20,15,0.22)] transition-transform duration-200 hover:scale-105">
         <img
@@ -53,7 +60,7 @@ export function WorldObject({ objectDef, placement }: WorldObjectProps) {
           📦
         </div>
       </div>
-      <ContributorLabel contributor={objectDef.contributor} />
+      <ContributorLabel contributor={effectiveContributor} />
     </div>
   );
 }

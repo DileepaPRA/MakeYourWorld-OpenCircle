@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { worldCatalog, implementedWorlds, worldsMap } from "@/data/worlds";
 import { WorldSchema } from "@/schemas";
+import { MAX_SEGMENTS_PER_WORLD } from "@/config/contribution-pool";
 
 describe("World Catalog Registry Unit Tests", () => {
   it("contains exactly 10 world specifications in the catalog", () => {
@@ -35,7 +36,7 @@ describe("World Catalog Registry Unit Tests", () => {
 
       const world = worldsMap[worldId];
       expect(world).toBeDefined();
-      expect(world.segments).toHaveLength(3);
+      expect(world.segments).toHaveLength(MAX_SEGMENTS_PER_WORLD);
       expect(world.objects.length).toBeGreaterThanOrEqual(1);
       expect(world.placements.length).toBeGreaterThanOrEqual(1);
 
@@ -54,12 +55,12 @@ describe("World Catalog Registry Unit Tests", () => {
     });
   });
 
-  it("ensures total segment count across all 10 worlds is exactly 30 segments", () => {
+  it("ensures total segment count across all 10 worlds is 100 segments (10 per world)", () => {
     const totalSegments = implementedWorlds.reduce(
       (count, world) => count + world.segments.length,
       0
     );
-    expect(totalSegments).toBe(30);
+    expect(totalSegments).toBe(10 * MAX_SEGMENTS_PER_WORLD);
   });
 
   it("ensures worldsMap dictionary indexes all 10 implemented worlds", () => {

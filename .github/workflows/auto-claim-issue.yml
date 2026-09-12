@@ -12,6 +12,7 @@ concurrency:
 permissions:
   contents: read
   issues: write
+  actions: write
 
 jobs:
   auto-claim:
@@ -170,4 +171,34 @@ jobs:
             });
 
             console.log(`✅ Successfully assigned @${commenter} to issue #${issue.number}.`);
-            console.log("GitHub will now trigger the 'issues: [assigned]' event to run the onboarding flow.");
+
+            // 8. Phase E: Assignment-Triggered Replenishment
+            // Since GITHUB_TOKEN suppresses downstream workflows triggered by 'issues: [assigned]',
+            // we directly dispatch the replenishment workflow via workflow_dispatch API.
+            // Concurrency group 'contribution-slot-replenishment' with cancel-in-progress: false
+            // safely queues the replenishment run, which recalculates the authoritative pool deficit.
+            console.log("Triggering contribution pool replenishment via workflow dispatch...");
+            try {
+              // Determine current branch / ref for the workflow dispatch (fallback to repository default or 'dev')
+              let targetRef = 'dev';
+              try {
+                const repoInfo = await github.rest.repos.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                });
+                targetRef = repoInfo.data.default_branch || 'dev';
+              } catch (e) {
+                console.log(`Using fallback ref '${targetRef}' for workflow dispatch.`);
+              }
+
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'replenish-contribution-slots.yml',
+                ref: targetRef,
+              });
+              console.log(`✅ Replenishment workflow 'replenish-contribution-slots.yml' successfully dispatched on ref '${targetRef}'.`);
+            } catch (dispatchErr) {
+              console.error("❌ Warning: Failed to dispatch replenishment workflow:", dispatchErr.message || dispatchErr);
+              console.error("The scheduled 6-hour reconciliation will replenish the pool as fallback.");
+            }

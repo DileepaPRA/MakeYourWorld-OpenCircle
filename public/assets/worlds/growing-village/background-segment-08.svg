@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%">
+  <defs>
+    <filter id="village-shadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#1c1917" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1c1917" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="sky-grad-growing-village-8" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0E7FF"/>
+      <stop offset="60%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FEF9C3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Layer: Timber Bridge diorama backdrop -->
+  <rect width="1600" height="900" fill="#FEF3C7"/>
+  <rect width="1600" height="500" fill="url(#sky-grad-growing-village-8)" opacity="0.9"/>
+
+  <!-- Village Thatched Cottage Cutout -->
+  <g filter="url(#village-shadow)">
+    <rect x="320" y="440" width="260" height="200" fill="#78350F" stroke="#451A03" stroke-width="2"/>
+    <polygon points="290,440 450,320 610,440" fill="#B45309" stroke="#451A03" stroke-width="2"/>
+    <rect x="420" y="520" width="50" height="120" fill="#FDE68A" stroke="#78350F" stroke-width="2"/>
+    <rect x="350" y="480" width="40" height="50" fill="#FEF3C7"/>
+    <rect x="500" y="480" width="40" height="50" fill="#FEF3C7"/>
+  </g>
+  <!-- Village Paper Stream Ribbon -->
+  <path d="M 0 680 Q 450 620 900 660 T 1600 640 L 1600 780 Q 950 760 450 780 T 0 820 Z" fill="#38BDF8" stroke="#BAE6FD" stroke-width="2" filter="url(#village-shadow)"/>
+</svg>
