@@ -1,0 +1,266 @@
+name: Notify Discord on Merged Contribution PR
+
+on:
+  pull_request:
+    types:
+      - closed
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  notify-merged:
+    name: Discord Celebration Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord celebration for merged contribution PR
+        uses: actions/github-script@v7
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              console.log("No pull request found in event payload. Skipping.");
+              return;
+            }
+
+            const isMerged = Boolean(pr.merged);
+            const prNumber = pr.number;
+            const prTitle = pr.title || "";
+            const prUrl = pr.html_url || "";
+            const githubUsername = pr.user ? pr.user.login : "";
+            const body = pr.body || "";
+
+            console.log("=================================================");
+            console.log("Growing Worlds Merged PR Discord Notification");
+            console.log("=================================================");
+            console.log(`PR Number:         #${prNumber}`);
+            console.log(`Action:            ${context.payload.action}`);
+            console.log(`Merged:            ${isMerged ? "YES" : "NO"}`);
+            console.log(`PR Author:         @${githubUsername}`);
+            console.log(`Title:             ${prTitle}`);
+            console.log("=================================================\n");
+
+            // 1. Guard: Only send if PR was actually merged
+            if (!isMerged) {
+              console.log(`PR #${prNumber} was closed without being merged. No Discord notification will be sent.`);
+              return;
+            }
+
+            // 2. Extract Discord Username from PR markdown body
+            function escapeRegex(str) {
+              return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            }
+
+            function extractDiscordUsername(bodyText) {
+              if (!bodyText || typeof bodyText !== "string") return null;
+
+              const keywords = ["Discord Username", "Discord Handle", "Discord Tag", "Discord"];
+              let rawValue = null;
+
+              // Table style markdown
+              for (const keyword of keywords) {
+                const tableRegex = new RegExp(
+                  "(?:^|\\n)\\|\\s*\\*\\*[^\\r\\n]*?" +
+                    escapeRegex(keyword) +
+                    "[^\\r\\n]*?\\*\\*\\s*\\|\\s*(?:`?)([^`\\r\\n|]+?)(?:`?)\\s*\\|",
+                  "i"
+                );
+                const match = bodyText.match(tableRegex);
+                if (match && match[1]) {
+                  rawValue = match[1].trim();
+                  break;
+                }
+              }
+
+              // List or key-value style markdown
+              if (!rawValue) {
+                for (const keyword of keywords) {
+                  const listRegex = new RegExp(
+                    `(?:^|\\n)[-*]?\\s*\\*{0,2}${escapeRegex(keyword)}\\*{0,2}\\s*:\\s*(?:` +
+                      `\\[e\\.g\\.,?\\s*)?([^\\]\\r\\n]+?)(?:\\])?(?=[\\r\\n]|$)`,
+                    "i"
+                  );
+                  const match = bodyText.match(listRegex);
+                  if (match && match[1]) {
+                    rawValue = match[1].trim();
+                    break;
+                  }
+                }
+              }
+
+              // Heading style markdown
+              if (!rawValue) {
+                for (const keyword of keywords) {
+                  const headingRegex = new RegExp(
+                    `(?:^|\\n)#{1,4}\\s*(?:[^\\r\\n]*?\\s)?${escapeRegex(keyword)}(?:\\s[^\\r\\n]*?)?[\\r\\n]+([\\s\\S]*?)(?=(?:\\n#{1,4}\\s+|\\n---|\\n\\*\\*|$))`,
+                    "i"
+                  );
+                  const match = bodyText.match(headingRegex);
+                  if (match && match[1]) {
+                    const lines = match[1]
+                      .split("\n")
+                      .map((l) => l.trim())
+                      .filter((l) => l.length > 0 && !l.startsWith(">"));
+                    if (lines.length > 0) {
+                      rawValue = lines[0];
+                      break;
+                    }
+                  }
+                }
+              }
+
+              if (!rawValue) return null;
+
+              let cleaned = rawValue
+                .replace(/^[`"'\s*~]+|[`"'\s*~]+$/g, "")
+                .replace(/<[^>]*>/g, "")
+                .trim();
+
+              if (cleaned.startsWith("@")) {
+                cleaned = cleaned.slice(1).trim();
+              }
+
+              if (!cleaned) return null;
+
+              const lower = cleaned.toLowerCase();
+              const invalidPlaceholders = new Set([
+                "your-discord-username",
+                "@your-discord-username",
+                "<your-discord-username>",
+                "_no response_",
+                "no response",
+                "none",
+                "n/a",
+                "na",
+                "null",
+                "undefined",
+              ]);
+
+              if (invalidPlaceholders.has(lower) || lower.includes("your-discord-username")) {
+                return null;
+              }
+
+              return cleaned;
+            }
+
+            const discordUsername = extractDiscordUsername(body);
+
+            // 3. Guard: Do not send notification containing a fake/unknown Discord username
+            if (!discordUsername) {
+              console.warn(
+                `⚠️ Warning: No valid Discord username found in description for PR #${prNumber}. ` +
+                "Skipping Discord notification to prevent invalid attribution."
+              );
+              return;
+            }
+
+            console.log(`Parsed Contributor Info:\n  GitHub:  @${githubUsername}\n  Discord: ${discordUsername}\n`);
+
+            // 4. Idempotency Check: search PR comments for the marker before sending
+            const idempotencyMarker = `<!-- growing-worlds:merged-pr-notification:${prNumber} -->`;
+            console.log(`Checking existing comments on PR #${prNumber} for idempotency marker...`);
+
+            let alreadyNotified = false;
+            try {
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                per_page: 100,
+              });
+
+              alreadyNotified = comments.some((c) => c.body && c.body.includes(idempotencyMarker));
+            } catch (err) {
+              console.warn("Could not check existing comments on PR (non-fatal):", err.message);
+            }
+
+            if (alreadyNotified) {
+              console.log(`Notification for merged PR #${prNumber} has already been sent (idempotency marker detected). Skipping.`);
+              return;
+            }
+
+            // 5. Discord Webhook Sending
+            const webhookUrl = process.env.DISCORD_WEBHOOK;
+            if (!webhookUrl) {
+              console.log("ℹ️ DISCORD_WEBHOOK secret is not configured or empty. Skipping notification dispatch.");
+              return;
+            }
+
+            const notificationContent = [
+              "🎉 **Contribution Merged!**",
+              "",
+              `**GitHub:** @${githubUsername}`,
+              `**Discord:** ${discordUsername}`,
+              `**PR:** #${prNumber}`,
+              "",
+              "Thank you for contributing to Growing Worlds!",
+            ].join("\n");
+
+            const discordPayload = {
+              content: notificationContent,
+              embeds: [
+                {
+                  title: `🎉 Contribution Merged! #${prNumber}`,
+                  url: prUrl,
+                  description: `Thank you **@${githubUsername}** for contributing to **Growing Worlds**! 🌿\nYour paper cutout object is now part of the world diorama.`,
+                  color: 65280, // Vibrant Green
+                  fields: [
+                    { name: "GitHub", value: `[@${githubUsername}](https://github.com/${githubUsername})`, inline: true },
+                    { name: "Discord", value: discordUsername, inline: true },
+                    { name: "PR", value: `[#${prNumber}](${prUrl})`, inline: true },
+                  ],
+                  footer: {
+                    text: "Growing Worlds • Open source education in action!",
+                  },
+                },
+              ],
+            };
+
+            console.log(`Sending celebratory notification to Discord for PR #${prNumber}...`);
+            let discordResponseOk = false;
+
+            try {
+              const res = await fetch(webhookUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(discordPayload),
+              });
+
+              if (res.ok || res.status === 204) {
+                console.log(`✅ Discord notification successfully sent for PR #${prNumber}.`);
+                discordResponseOk = true;
+              } else {
+                console.error(`❌ Discord webhook returned status ${res.status}: ${res.statusText}`);
+              }
+            } catch (err) {
+              console.error("❌ Failed to send Discord notification:", err.message);
+            }
+
+            // 6. After successful Discord response, create the marker comment to enforce idempotency
+            if (discordResponseOk) {
+              console.log(`Creating idempotency marker comment on PR #${prNumber}...`);
+              const markerCommentBody = [
+                idempotencyMarker,
+                "🎉 **Contribution Celebration Sent!**",
+                "",
+                `Notification successfully shared with the community on Discord for contributor **@${githubUsername}** (\`${discordUsername}\`).`,
+              ].join("\n");
+
+              try {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: prNumber,
+                  body: markerCommentBody,
+                });
+                console.log("✅ Idempotency marker comment created successfully.");
+              } catch (err) {
+                console.error(
+                  `⚠️ Warning: Failed to post idempotency marker comment on PR #${prNumber}: ${err.message}. ` +
+                  "The Discord notification was already delivered."
+                );
+              }
+            }
