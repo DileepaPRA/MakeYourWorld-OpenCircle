@@ -29,4 +29,12 @@ export const forestObjects: WorldObject[] = [
       githubUsername: "yourprateek",
     },
   },
+  {
+  id: "forest-deer",
+  asset: "/assets/worlds/growing-forest/forest-deer.svg",
+  contributor: {
+    displayName: "Amila pathum",
+    githubUsername: "amila-pathum",
+  },
+},
 ];
