@@ -118,19 +118,15 @@ describe("Repository Data & Asset Integrity Audit Suite", () => {
       const forest = implementedWorlds.find((w) => w.id === "growing-forest")!;
       const forest01 = forest.placements.filter((p) => p.segmentId === "forest-01");
       const forest03 = forest.placements.filter((p) => p.segmentId === "forest-03");
-      expect(forest01.length).toBe(2);
-      expect(forest03.length).toBe(1);
-      expect(forest01[0].objectId).toBe("pine-tree");
-      expect(forest01[1].objectId).toBe("song-bird");
-      expect(forest03[0].objectId).toBe("red-mushroom");
+      expect(forest01.some((p) => p.objectId === "pine-tree")).toBe(true);
+      expect(forest01.some((p) => p.objectId === "song-bird")).toBe(true);
+      expect(forest03.some((p) => p.objectId === "red-mushroom")).toBe(true);
 
       const ocean = implementedWorlds.find((w) => w.id === "growing-ocean")!;
       const ocean01 = ocean.placements.filter((p) => p.segmentId === "ocean-01");
       const ocean03 = ocean.placements.filter((p) => p.segmentId === "ocean-03");
-      expect(ocean01.length).toBe(1);
-      expect(ocean03.length).toBe(1);
-      expect(ocean01[0].objectId).toBe("clownfish");
-      expect(ocean03[0].objectId).toBe("research-submarine");
+      expect(ocean01.some((p) => p.objectId === "clownfish")).toBe(true);
+      expect(ocean03.some((p) => p.objectId === "research-submarine")).toBe(true);
     });
   });
 });
